@@ -1,9 +1,15 @@
-﻿namespace Bookstore.Domain.Carts
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+
+namespace Bookstore.Domain.Carts
 {
+    [Table("shoppingcart", Schema = "bobsusedbookstore_dbo")]
     public class ShoppingCart : Entity
     {
         public List<ShoppingCartItem> ShoppingCartItems { get; private set; } = new();
 
+        [Column("correlationid")]
         public string CorrelationId { get; set; }
 
         public ShoppingCart(string correlationId)
@@ -14,23 +20,23 @@
         public IEnumerable<ShoppingCartItem> GetShoppingCartItems(ShoppingCartItemFilter filter)
         {
             return filter == ShoppingCartItemFilter.IncludeOutOfStockItems ?
-                ShoppingCartItems.Where(x => x.WantToBuy == 1) :
-                ShoppingCartItems.Where(x => x.WantToBuy == 1 && x.Book.Quantity > 0);
+                ShoppingCartItems.Where(x => x.WantToBuy) :
+                ShoppingCartItems.Where(x => x.WantToBuy && x.Book.Quantity > 0);
         }
 
         public IEnumerable<ShoppingCartItem> GetWishListItems()
         {
-            return ShoppingCartItems.Where(x => x.WantToBuy == 0);
+            return ShoppingCartItems.Where(x => !x.WantToBuy);
         }
 
         public void AddItemToShoppingCart(int bookId, int quantity)
         {
-            ShoppingCartItems.Add(new ShoppingCartItem(this, bookId, quantity, 1));
+            ShoppingCartItems.Add(new ShoppingCartItem(this, bookId, quantity, true));
         }
 
         public void AddItemToWishlist(int bookId)
         {
-            ShoppingCartItems.Add(new ShoppingCartItem(this, bookId, 1, 0));
+            ShoppingCartItems.Add(new ShoppingCartItem(this, bookId, 1, false));
         }
 
         public void MoveWishListItemToShoppingCart(int shoppingCartItemId)
@@ -39,7 +45,7 @@
 
             if (wishListItem == null) return;
 
-            wishListItem.WantToBuy = 1;
+            wishListItem.WantToBuy = true;
         }
 
         public void RemoveShoppingCartItemById(int shoppingCartItemId)

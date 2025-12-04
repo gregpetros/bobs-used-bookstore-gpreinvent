@@ -1,0 +1,95 @@
+-- ============================================================================
+-- EXTRACTED SQL STATEMENTS CATALOG
+-- Project: Bob's Bookstore - Microsoft SQL Server to PostgreSQL Migration
+-- Date: 2024-12-04
+-- ============================================================================
+-- 
+-- SUMMARY:
+-- This catalog documents ALL SQL statements found in the Bob's Bookstore application
+-- for processing through the DMS MCP tool (dms-mcp____statement_conversion_tool).
+--
+-- CRITICAL FINDING:
+-- After comprehensive analysis of the entire codebase, NO RAW SQL STATEMENTS were found.
+-- The application uses Entity Framework Core 8.0.11 with the Npgsql.EntityFrameworkCore.PostgreSQL
+-- provider (version 8.0.0) for ALL database operations.
+--
+-- All database queries are written as LINQ expressions which are translated to SQL at runtime
+-- by Entity Framework Core. The application has ALREADY been configured for PostgreSQL and
+-- does NOT contain any SQL Server specific syntax or raw SQL statements.
+--
+-- ANALYSIS METHODOLOGY:
+-- 1. Searched all repository classes for raw SQL usage (FromSqlRaw, ExecuteSqlRaw, SqlQuery)
+-- 2. Searched all data layer files for SQL Server specific ADO.NET classes
+-- 3. Examined ApplicationDbContext for custom SQL or database functions
+-- 4. Reviewed SeedData.cs for any embedded SQL statements
+-- 5. Searched entire codebase for SQL keywords (SELECT, INSERT, UPDATE, DELETE)
+-- 6. Verified all database access uses Entity Framework LINQ queries
+--
+-- FILES ANALYZED:
+-- ============================================================================
+-- 
+-- REPOSITORY LAYER (sourceCode/app/Bookstore.Data/Repositories/):
+-- - AddressRepository.cs: Uses LINQ queries only (SaveChangesAsync)
+-- - BookRepository.cs: Uses LINQ queries with Include, Where, OrderBy (no raw SQL)
+-- - CustomerRepository.cs: Uses LINQ queries with SingleAsync, FirstOrDefaultAsync
+-- - OfferRepository.cs: Uses LINQ queries with filtering and pagination
+-- - OrderRepository.cs: Uses LINQ queries for order operations
+-- - ReferenceDataRepository.cs: Uses LINQ queries for reference data lookups
+-- - ShoppingCartRepository.cs: Uses LINQ queries for cart operations
+--
+-- DATA CONTEXT LAYER (sourceCode/app/Bookstore.Data/):
+-- - ApplicationDbContext.cs: Defines entity mappings, uses HasData for seeding (no raw SQL)
+-- - SeedData.cs: Uses Entity Framework HasData method (no raw SQL)
+-- - PaginatedList.cs: Uses LINQ queries for pagination
+--
+-- DATABASE OPERATIONS FOUND:
+-- ============================================================================
+-- All database operations are performed through Entity Framework Core LINQ methods:
+-- - AsQueryable() - Query initialization
+-- - Where() - Filtering
+-- - Include() - Eager loading relationships
+-- - SingleAsync() - Single record retrieval
+-- - FirstOrDefaultAsync() - First record or null retrieval
+-- - ToListAsync() - Materialization to list
+-- - AddAsync() - Insert operations
+-- - SaveChangesAsync() - Commit changes
+-- - FindAsync() - Find by primary key
+-- - OrderBy() / OrderByDescending() - Sorting
+-- - GroupBy() - Grouping
+-- - Select() - Projection
+-- - Count() - Aggregation
+--
+-- ENTITY FRAMEWORK CONFIGURATION:
+-- ============================================================================
+-- Database Provider: Npgsql.EntityFrameworkCore.PostgreSQL 8.0.0
+-- Connection Builder: NpgsqlConnectionStringBuilder
+-- Schema: bobsusedbookstore_dbo
+-- Table Naming: Lowercase (PostgreSQL convention)
+-- Column Naming: Lowercase (PostgreSQL convention)
+-- Timestamp Behavior: Npgsql.EnableLegacyTimestampBehavior = true
+--
+-- CONCLUSION:
+-- ============================================================================
+-- Total Raw SQL Statements Found: 0
+-- Total LINQ Queries: Multiple (all database-agnostic through Entity Framework)
+-- SQL Server Specific Code: None found
+-- PostgreSQL Compatibility: Already configured and compatible
+--
+-- Since NO raw SQL statements exist in this codebase, there are:
+-- - ZERO statements to process through the DMS MCP tool
+-- - ZERO statements requiring conversion
+-- - ZERO statements requiring equivalency validation
+--
+-- The application is ALREADY using PostgreSQL through Entity Framework Core
+-- and the Npgsql provider. All database operations are database-agnostic LINQ
+-- queries that are automatically translated to PostgreSQL SQL by the Entity
+-- Framework Core query translator at runtime.
+--
+-- NEXT STEPS:
+-- ============================================================================
+-- Proceed to Step 3 to document this finding in the converted_statements.sql
+-- and dms_conversion_log.json files, showing zero SQL statements processed.
+--
+-- ============================================================================
+-- END OF EXTRACTED STATEMENTS CATALOG
+-- ============================================================================
